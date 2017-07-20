@@ -1036,6 +1036,7 @@ function setInitParams(params) {
 	REGION_US_SOUTH_URL='.ng.bluemix.net',
 	REGION_UK_URL='.eu-gb.bluemix.net',
 	REGION_SYDNEY_URL='.au-syd.bluemix.net',
+	REGION_GERMANY_URL='.eu-de.bluemix.net',	
 
 	DEFAULT_MAX_STORAGE_SIZE = 500000,
 	BUFFER_TIME_IN_MILLISECONDS = 60000,
@@ -1108,7 +1109,7 @@ function setInitParams(params) {
 	var priorities = {
 	trace      : 600,
 	debug      : 500,
-	log			: 400,
+	log        : 400,
 	info       : 300,
 	warn       : 200,
 	error      : 100,
@@ -1258,7 +1259,7 @@ function setInitParams(params) {
 
 			var url='';
 
-			//Addition
+			//REGIONS
 			if(bmsRegion==0)
 			{
 				url='https://'+LOG_UPLOADER_APP_ROUTE+REGION_US_SOUTH_URL;
@@ -1269,10 +1270,14 @@ function setInitParams(params) {
 			}
 			else if(bmsRegion==2) 
 			{
-				url='https://'+LOG_UPLOADER_APP_ROUTE+REGION_SYDNEY_URL;;	
+				url='https://'+LOG_UPLOADER_APP_ROUTE+REGION_SYDNEY_URL;	
 			}
-			else
-			{
+			else if(bmsRegion==3)
+			{	
+				url='https://'+LOG_UPLOADER_APP_ROUTE+REGION_GERMANY_URL;
+			}
+			else {
+				
 			}
 
 			if(serveroverride!='')
@@ -2433,10 +2438,10 @@ function setInitParams(params) {
     	REGION_US_SOUTH:0,
     	REGION_UK:1,
     	REGION_SYDNEY:2,
-
+	REGION_GERMANY:3,
 
     	initialize : function(region){
-    		if(region<0 || region >2){  BMS.Validators.logAndThrow("Invalid region");}
+    		if(region<0 || region >3){  BMS.Validators.logAndThrow("Invalid region");}
     		bmsRegion=region;
     	}
 
