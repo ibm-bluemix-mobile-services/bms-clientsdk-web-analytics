@@ -3,47 +3,153 @@ body {
     font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
     font-weight: 300;
     margin: 0px;
-	padding: 0px;
+  padding: 0px;
 }
 
-#button_content {
+
+#button_content0 {
   position: absolute;
-  bottom: 60%;
-  width: 100%;
+  bottom: 70%;
+  left: 10%;
+}
+
+#text_content0 {
+  position: absolute;
+  bottom: 70%;
+  left: 40%;
 }
 
 #button_content1 {
   position: absolute;
-  bottom: 50%;
-  width: 100%;
+  bottom: 70%;
+  left: 70%;
 }
+
+
 
 #button_content2 {
   position: absolute;
-  bottom: 40%;
-  width: 100%;
+  bottom: 57%;
+  left: 10%;
 }
 
 #button_content3 {
   position: absolute;
-  bottom: 30%;
-  width: 100%;
+  bottom: 57%;
+  left: 40%;
 }
 
 #button_content4 {
   position: absolute;
-  bottom: 20%;
-  width: 100%;
+  bottom: 57%;
+  left: 70%;
 }
+
 
 #button_content5 {
   position: absolute;
-  bottom: 10%;
-  width: 100%;
+  bottom: 49%;
+  left: 10%;
+}
+#text_content1 {
+  position: absolute;
+  bottom: 49%;
+  left: 40%;
+}
+#button_content6 {
+  position: absolute;
+  bottom: 49%;
+  left: 70%;
 }
 
 
-#ping_button {
+
+#text_content2 {
+  position: absolute;
+  bottom: 41%;
+  left: 10%;
+}
+#text_content3 {
+  position: absolute;
+  bottom: 41%;
+  left: 40%;
+}
+#button_content7 {
+  position: absolute;
+  bottom: 41%;
+  left: 70%;
+}
+
+
+#button_content8{
+  position: absolute;
+  bottom: 33%;
+  left: 10%;
+}
+#text_content4 {
+  position: absolute;
+  bottom: 33%;
+  left: 40%;
+}
+#button_content9 {
+  position: absolute;
+  bottom: 33%;
+  left: 70%;
+}
+
+
+#button_content10 {
+  position: absolute;
+  bottom: 20%;
+  left: 10%;
+}
+#button_content11 {
+  position: absolute;
+  bottom: 20%;
+  left: 40%;
+}
+#button_content12 {
+  position: absolute;
+  bottom: 20%;
+  left: 70%;
+}
+
+
+
+#text_content5 {
+  position: absolute;
+  bottom: 12%;
+  left: 25%;
+}
+#button_content13 {
+  position: absolute;
+  bottom: 12%;
+  left: 55%;
+}
+
+
+
+
+#ping {
+  display: block;
+  margin: 0 auto;
+  height: 40px;
+  width: 240px;
+  font-size: 20px;
+  color: white;
+  background-color: #325c80;
+}
+#userIdentity {
+  display: block;
+  border: 1px solid #cdcdcd;
+  border-color: black;
+  height: 40px;
+  width: 240px;
+  font-size: 20px;
+  color: black;
+  
+}
+#setUsrContext {
   display: block;
   margin: 0 auto;
   height: 40px;
@@ -54,7 +160,26 @@ body {
 }
 
 
-#ping_button1 {
+
+#disableLogger {
+  display: block;
+  margin: 0 auto;
+  height: 40px;
+  width: 240px;
+  font-size: 20px;
+  color: white;
+  background-color: #325c80;
+}
+#enableLogger {
+  display: block;
+  margin: 0 auto;
+  height: 40px;
+  width: 240px;
+  font-size: 20px;
+  color: white;
+  background-color: #325c80;
+}
+#isEnabled {
   display: block;
   margin: 0 auto;
   height: 40px;
@@ -64,7 +189,26 @@ body {
   background-color: #325c80;
 }
 
-#ping_button2 {
+
+#getLogLevel {
+  display: block;
+  margin: 0 auto;
+  height: 40px;
+  width: 240px;
+  font-size: 20px;
+  color: white;
+  background-color: #325c80;
+}
+#loglevelset {
+  display: block;
+  border: 1px solid #cdcdcd;
+  border-color: black;
+  height: 40px;
+  width: 240px;
+  font-size: 20px;
+  color: black; 
+}
+#setLogLevel {
   display: block;
   margin: 0 auto;
   height: 40px;
@@ -74,7 +218,26 @@ body {
   background-color: #325c80;
 }
 
-#ping_button3 {
+
+#logText {
+  display: block;
+  border: 1px solid #cdcdcd;
+  border-color: black;
+  height: 40px;
+  width: 240px;
+  font-size: 20px;
+  color: black;  
+}
+#logTextLevel {
+  display: block;
+  border: 1px solid #cdcdcd;
+  border-color: black;
+  height: 40px;
+  width: 240px;
+  font-size: 20px;
+  color: black;  
+}
+#sendLog {
   display: block;
   margin: 0 auto;
   height: 40px;
@@ -84,7 +247,8 @@ body {
   background-color: #325c80;
 }
 
-#ping_button4 {
+
+#enableAnalytics {
   display: block;
   margin: 0 auto;
   height: 40px;
@@ -93,7 +257,7 @@ body {
   color: white;
   background-color: #325c80;
 }
-#ping_button5 {
+#disableAnalytics {
   display: block;
   margin: 0 auto;
   height: 40px;
@@ -102,9 +266,67 @@ body {
   color: white;
   background-color: #325c80;
 }
+#sendAnalytics {
+  display: block;
+  margin: 0 auto;
+  height: 40px;
+  width: 240px;
+  font-size: 20px;
+  color: white;
+  background-color: #325c80;
+}
+
+
+#analyticscustomlog {
+  display: block;
+  border: 1px solid #cdcdcd;
+  border-color: black;
+  height: 40px;
+  width: 240px;
+  font-size: 20px;
+  color: black;  
+}
+#customLogAnalytics {
+  display: block;
+  margin: 0 auto;
+  height: 40px;
+  width: 240px;
+  font-size: 20px;
+  color: white;
+  background-color: #325c80;
+}
+
+#getlogStoreSize {
+  display: block;
+  margin: 0 auto;
+  height: 40px;
+  width: 240px;
+  font-size: 20px;
+  color: white;
+  background-color: #325c80;
+}
+#logStoreSize {
+  display: block;
+  border: 1px solid #cdcdcd;
+  border-color: black;
+  height: 40px;
+  width: 240px;
+  font-size: 20px;
+  color: black;  
+}
+#setlogStoreSize {
+  display: block;
+  margin: 0 auto;
+  height: 40px;
+  width: 240px;
+  font-size: 20px;
+  color: white;
+  background-color: #325c80;
+}
+
 
 #main {
-  top: 10%;
+  top: 5%;
   position: absolute;
   text-align: center;
   width: 100%

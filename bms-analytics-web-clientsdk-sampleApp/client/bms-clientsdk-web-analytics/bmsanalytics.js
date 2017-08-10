@@ -1023,22 +1023,33 @@ function setInitParams(params) {
 	// BMS.Config.__setServerOverride(serverOverride);
 	BMS.Config.__setInstanceId(instId);
 }
-
-
-	REQ_SEND_LOGS = '/analytics-service/rest/data/events/clientlogs/',
-	LOG_UPLOADER_APP_ROUTE='mobile-analytics-dashboard';
+//__________________________________________________________________________________________________
+// KEYS and MACRO PARAMETERS
 	KEY_LOCAL_STORAGE_LOGS = '__BMS_WEBLOG_LOGS__',
 	KEY_LOCAL_STORAGE_SWAP = '__BMS_WEBLOG_SWAP__',
 	KEY_LOCAL_STORAGE_ANALYTICS_LIFECYCLE = '__BMS_WEBLOG_ANALYTICS__LIFECYCLE',
 	KEY_LOCAL_STORAGE_ANALYTICS_NETWORKTRANS ='__BMS_WEBLOG_ANALYTICS__NETWORKTRANS',
 	KEY_LOCAL_STORAGE_CONFIG = '__BMS_WEBLOG_CONFIG__',
 	KEY_REMOTE_STORAGE_CONFIG = '__BMS_WEBLOG_REMOTE_CONFIG__',
+	DEFAULT_MAX_STORAGE_SIZE = 500000,
+	BUFFER_TIME_IN_MILLISECONDS = 60000,
+	
+//__________________________________________________________________________________________________
+// SERVICE PATHS AND DOMAINS	
+	REQ_SEND_LOGS = '/analytics-service/rest/data/events/clientlogs/',
+	LOG_UPLOADER_APP_ROUTE='mobile-analytics-dashboard';
+	
 	REGION_US_SOUTH_URL='.ng.bluemix.net',
 	REGION_UK_URL='.eu-gb.bluemix.net',
 	REGION_SYDNEY_URL='.au-syd.bluemix.net',
+	REGION_GERMANY_URL='.eu-de.bluemix.net',
+//__________________________________________________________________________________________________
 
-	DEFAULT_MAX_STORAGE_SIZE = 500000,
-	BUFFER_TIME_IN_MILLISECONDS = 60000,
+
+//__________________________________________________________________________________________________
+
+//LOCAL VARIABLES
+
 	sendLogsTimeBuffer = 0,
 
 	analyticsLocalStorage = {
@@ -1084,7 +1095,7 @@ function setInitParams(params) {
     	NETWORKTRANSACTION:2,
     	NONE:3
     };
-	var deviceEvents0=deviceEvents.ALL;
+	var current_set_DeviceEvent=deviceEvents.ALL;
 	if (!window.console) {  // thanks a lot, IE9
   		/*jshint -W020 */
 		console = {
@@ -1117,10 +1128,14 @@ function setInitParams(params) {
 	};
 
 	//BMSAnalytics Private Functions  **********
+//__________________________________________________________________________________________________
 
 	(function(){
 	})();
 	
+	/*
+	 * PRIVATE METHODS
+	 */
 	var __usingLocalConfiguration = function(){
 		var configurationString = analyticsLocalStorage.getItem(KEY_REMOTE_STORAGE_CONFIG);
 
@@ -1132,7 +1147,6 @@ function setInitParams(params) {
 	};
 
 
-	//private functions 
 	function generateUUID(newSession) {
 		"use strict";
 
@@ -1220,9 +1234,7 @@ function setInitParams(params) {
 	}; 
 
 
-	/*
-	 * PRIVATE METHODS
-	 */
+	
 
 	var __send = function(keys) {
 		return new Promise(function (resolve, reject) {
@@ -1258,7 +1270,6 @@ function setInitParams(params) {
 
 			var url='';
 
-
 			//Addition
 			if(bmsRegion==0)
 			{
@@ -1272,11 +1283,14 @@ function setInitParams(params) {
 			{
 				url='https://'+LOG_UPLOADER_APP_ROUTE+REGION_SYDNEY_URL;;	
 			}
+			else if(bmsRegion==3)
+ 			{	
+ 				url='https://'+LOG_UPLOADER_APP_ROUTE+REGION_GERMANY_URL;
+ 			}
 			else
 			{
 			}
 
-			console.log("&&&&"+serveroverride );
 			if(serveroverride!='')
 			{
 				url='http://'+serveroverride;
@@ -1306,7 +1320,7 @@ function setInitParams(params) {
     	  
       };
       
-       logOutboundRequest = function (request) {
+    var logOutboundRequest = function (request) {
 			try{
 			    if (!request.trackingId) {
 					request.trackingId = getTrackingId();
@@ -1339,7 +1353,7 @@ function setInitParams(params) {
 				 'metadata': logMetadata
 				};
 				
-    			__persistLog(logData, KEY_LOCAL_STORAGE_ANALYTICS_NETWORKTRANS);
+				__persistLog(logData, KEY_LOCAL_STORAGE_ANALYTICS_NETWORKTRANS);
     			return true;
 				
 			}catch(e){
@@ -1392,7 +1406,7 @@ function setInitParams(params) {
 					 'msg': 'InternalRequestSender logInboundResponse',
 					 'metadata': metadata
 					};
-    			__persistLog(logData, KEY_LOCAL_STORAGE_ANALYTICS_LIFECYCLE);
+    			__persistLog(logData, KEY_LOCAL_STORAGE_ANALYTICS_NETWORKTRANS);
 				}
 			}catch(e){
 			}
@@ -1409,7 +1423,7 @@ function setInitParams(params) {
 				 'msg': 'InternalRequestSender logInboundResponse',
 				 'metadata': metadata
 				};
-				__persistLog(logData, KEY_LOCAL_STORAGE_ANALYTICS_LIFECYCLE);
+				__persistLog(logData, KEY_LOCAL_STORAGE_ANALYTICS_NETWORKTRANS);
 				
 			}catch(e){
 				console.error('analytics: Failed to log event');
@@ -1437,8 +1451,10 @@ function setInitParams(params) {
         return JSON.stringify(logdata);
     };
 
+
+
 	var __persistLog = function(log, key){
-    		if(__fileSizeReached(key)){
+			if(__fileSizeReached(key)){
     			if(key === KEY_LOCAL_STORAGE_LOGS){
     				__attemptFileSwap();
     			}else{
@@ -1449,7 +1465,8 @@ function setInitParams(params) {
 
     		var stringified = JSON.stringify(log);
     		var persistedLogs = analyticsLocalStorage.getItem(key);
-
+    		console.log('__persistLog() '+key+': '+stringified);
+    		
     		if(persistedLogs === null){
     			persistedLogs = stringified;
     		}else{
@@ -1897,7 +1914,6 @@ function setInitParams(params) {
 
     function __getKeys(obj) {
         var arr = [];
-
         for (var key in obj) {
             if(obj.hasOwnProperty(key)){
                 arr.push(key);
@@ -2057,9 +2073,9 @@ function setInitParams(params) {
         if (state.tag.level) {
             str = LEFT_BRACKET + priority.toUpperCase() + RIGHT_BRACKET + str;
         }
-
         if (!state.stringify && str.length > 0) {
-            args.unshift(str);
+        	args.unshift(str);
+        	
         }
 
         
@@ -2087,16 +2103,15 @@ function setInitParams(params) {
 					  'msg': msg,
 					  'metadata': meta
 					};
-					//console.log('++ '+level+' '+state.analyticsCapture);
+
+
+					console.log('__log()'+ priority+' '+JSON.stringify(logData));
 					if(level === 'ANALYTICS' && deviceevents=='LIFECYCLE' && state.analyticsCapture !== false){
-						//console.log('>>analytics log');
 					  __persistLog(logData, KEY_LOCAL_STORAGE_ANALYTICS_LIFECYCLE);
 					}else if(level === 'ANALYTICS' && deviceevents=='NETWORKTRANSACTION' && state.analyticsCapture !== false){
-
 					  __persistLog(logData, KEY_LOCAL_STORAGE_ANALYTICS_NETWORKTRANS);
 					}
 					else if(state.capture !== false){
-						//console.log('>> log');
 					  __persistLog(logData, KEY_LOCAL_STORAGE_LOGS);
 					}
 			  }
@@ -2229,6 +2244,16 @@ function setInitParams(params) {
 	};
 	
 	
+	function _logUserAnalyticsStart() {
+		var meta = {
+    	'$category' : 'initialCtx',
+    	 '$userID' : userID,
+    	'$appSessionID' : appSessionID
+    	 };
+    	state.metadata = meta;
+    	_pkg('bms.analytics');
+    	__log('appSession','ANALYTICS','LIFECYCLE');
+	}
 	
 	function _logUserAnalytics() {
 		var meta = {
@@ -2242,7 +2267,8 @@ function setInitParams(params) {
 	};
 	
 	function logAnalyticsSessionStart() {
-	    appSessionID = generateUUID();
+	    appSessionID = generateUUID('new');
+	    _logUserAnalyticsStart();
     	var meta = {
     	 '$category' : 'appSession',
     	 '$appSessionID' : appSessionID
@@ -2261,7 +2287,10 @@ function setInitParams(params) {
     	 '$closedBy' : 'user',
     	 '$appSessionID' : appSessionID
     	};
+    	console.log("****logAnalyticsSessionStop "+appSessionID);
     	appSessionID = generateUUID('new');
+    	console.log("****logAnalyticsSessionStop "+appSessionID);
+    	
     	state.metadata = meta;
     	_pkg('bms.analytics');
     	__log('appSession','ANALYTICS','LIFECYCLE');
@@ -2366,7 +2395,7 @@ function setInitParams(params) {
 
 		if(deviceevents!=null && deviceevents>=0 && deviceevents<=3)
 		{
-			deviceEvents0=deviceevents;
+			current_set_DeviceEvent=deviceevents;
 		}    	
     	
     	metadataHeader.contextRoot = "/analytics-service";
@@ -2437,11 +2466,11 @@ function setInitParams(params) {
     	REGION_US_SOUTH:0,
     	REGION_UK:1,
     	REGION_SYDNEY:2,
+    	REGION_GERMANY:3,
 
 
     	initialize : function(region){
-    		if(region<0 || region >2){  BMS.Validators.logAndThrow("Invalid region");}
-    		console.log('***region '+region);
+    		if(region<0 || region >3){  BMS.Validators.logAndThrow("Invalid region");}
     		bmsRegion=region;
     	}
 
@@ -2481,15 +2510,15 @@ function setInitParams(params) {
     	// 		return _processAutomaticTrigger();
     	// 	}
     	// }
-    	if(deviceEvents0==deviceEvents.ALL){
-    		console.log('send ALL analytics'+deviceEvents0);
-    		return __send([KEY_LOCAL_STORAGE_ANALYTICS_LIFECYCLE,KEY_LOCAL_STORAGE_ANALYTICS_NETWORKTRANS]);
+    	if(current_set_DeviceEvent==deviceEvents.ALL){
+    		console.log('send ALL analytics'+current_set_DeviceEvent);
+    		return __send([KEY_LOCAL_STORAGE_ANALYTICS_LIFECYCLE,KEY_LOCAL_STORAGE_ANALYTICS_NETWORKTRANS,KEY_LOCAL_STORAGE_LOGS]);
     	}
-    	else if(deviceEvents0==deviceEvents.LIFECYCLE){
-    		return __send([KEY_LOCAL_STORAGE_ANALYTICS_LIFECYCLE]);
+    	else if(current_set_DeviceEvent==deviceEvents.LIFECYCLE){
+    		return __send([KEY_LOCAL_STORAGE_ANALYTICS_LIFECYCLE,KEY_LOCAL_STORAGE_LOGS]);
     	}
-    	else if(deviceEvents0==deviceEvents.NETWORKTRANSACTION){
-    		return __send([KEY_LOCAL_STORAGE_ANALYTICS_NETWORKTRANS]);
+    	else if(current_set_DeviceEvent==deviceEvents.NETWORKTRANSACTION){
+    		return __send([KEY_LOCAL_STORAGE_ANALYTICS_NETWORKTRANS,KEY_LOCAL_STORAGE_LOGS]);
     	}
         else {
         	return __send([]);
@@ -2499,7 +2528,6 @@ function setInitParams(params) {
     //public analytics
     function _setUserIdentity(user) {
     	if(hasUsercontext==true){
-    		console.log('hasUsercontext'+hasUsercontext);
     		logAnalyticsSessionStop();
 	    	userID = user;	
     	}
@@ -2545,7 +2573,9 @@ function setInitParams(params) {
     };
 
     function __isStoringLogs(){
-		var state=__state();
+    	var state=__state();
+		console.log("__isStoringLogs"+ state.capture);
+		
 		if(typeof(state.capture)==='boolean') return state.capture;
 		else return true;
 	}
@@ -2579,91 +2609,91 @@ function setInitParams(params) {
 
     }
 
-    function __trace(msg) {
-		var name = '';
-		if (typeof msg === 'object') {
-			for(var key in msg){
-				name+=key + ' ';
-			}
-			logger.state().metadata = msg;
-			logger.pkg(_ANALYTICS_PKG_NAME).trace(name);
-		}
-		else {
-			logger.pkg(_ANALYTICS_PKG_NAME).trace(msg);
-		}		
-	}
+ //    function __trace(msg) {
+	// 	var name = '';
+	// 	if (typeof msg === 'object') {
+	// 		for(var key in msg){
+	// 			name+=key + ' ';
+	// 		}
+	// 		logger.state().metadata = msg;
+	// 		logger.pkg(_ANALYTICS_PKG_NAME).trace(name);
+	// 	}
+	// 	else {
+	// 		logger.pkg(_ANALYTICS_PKG_NAME).trace(msg);
+	// 	}		
+	// }
 
 
-	function __debug(msg) {
-		var name = '';
-		if (typeof msg === 'object') {
-			for(var key in msg){
-				name+=key + ' ';
-			}
-			logger.state().metadata = msg;
-			logger.pkg(_ANALYTICS_PKG_NAME).debug(name);
-		}
-		else {
-			logger.pkg(_ANALYTICS_PKG_NAME).debug(msg);
-		}		
-	}
+	// function __debug(msg) {
+	// 	var name = '';
+	// 	if (typeof msg === 'object') {
+	// 		for(var key in msg){
+	// 			name+=key + ' ';
+	// 		}
+	// 		logger.state().metadata = msg;
+	// 		logger.pkg(_ANALYTICS_PKG_NAME).debug(name);
+	// 	}
+	// 	else {
+	// 		logger.pkg(_ANALYTICS_PKG_NAME).debug(msg);
+	// 	}		
+	// }
 
 
-	function __info(msg) {
-		var name = '';
-		if (typeof msg === 'object') {
-			for(var key in msg){
-				name+=key + ' ';
-			}
-			logger.state().metadata = msg;
-			logger.pkg(_ANALYTICS_PKG_NAME).info(name);
-		}
-		else {
-			logger.pkg(_ANALYTICS_PKG_NAME).info(msg);
-		}		
-	}
+	// function __info(msg) {
+	// 	var name = '';
+	// 	if (typeof msg === 'object') {
+	// 		for(var key in msg){
+	// 			name+=key + ' ';
+	// 		}
+	// 		logger.state().metadata = msg;
+	// 		logger.pkg(_ANALYTICS_PKG_NAME).info(name);
+	// 	}
+	// 	else {
+	// 		logger.pkg(_ANALYTICS_PKG_NAME).info(msg);
+	// 	}		
+	// }
 
-	function __warn(msg) {
-		var name = '';
-		if (typeof msg === 'object') {
-			for(var key in msg){
-				name+=key + ' ';
-			}
-			logger.state().metadata = msg;
-			logger.pkg(_ANALYTICS_PKG_NAME).warn(name);
-		}
-		else {
-			logger.pkg(_ANALYTICS_PKG_NAME).warn(msg);
-		}		
-	}
+	// function __warn(msg) {
+	// 	var name = '';
+	// 	if (typeof msg === 'object') {
+	// 		for(var key in msg){
+	// 			name+=key + ' ';
+	// 		}
+	// 		logger.state().metadata = msg;
+	// 		logger.pkg(_ANALYTICS_PKG_NAME).warn(name);
+	// 	}
+	// 	else {
+	// 		logger.pkg(_ANALYTICS_PKG_NAME).warn(msg);
+	// 	}		
+	// }
 
-	function __error(msg) {
-		var name = '';
-		if (typeof msg === 'object') {
-			for(var key in msg){
-				name+=key + ' ';
-			}
-			logger.state().metadata = msg;
-			logger.pkg(_ANALYTICS_PKG_NAME).error(name);
-		}
-		else {
-			logger.pkg(_ANALYTICS_PKG_NAME).error(msg);
-		}		
-	}
+	// function __error(msg) {
+	// 	var name = '';
+	// 	if (typeof msg === 'object') {
+	// 		for(var key in msg){
+	// 			name+=key + ' ';
+	// 		}
+	// 		logger.state().metadata = msg;
+	// 		logger.pkg(_ANALYTICS_PKG_NAME).error(name);
+	// 	}
+	// 	else {
+	// 		logger.pkg(_ANALYTICS_PKG_NAME).error(msg);
+	// 	}		
+	// }
 
-	function __fatal(msg) {
-		var name = '';
-		if (typeof msg === 'object') {
-			for(var key in msg){
-				name+=key + ' ';
-			}
-			logger.state().metadata = msg;
-			logger.pkg(_ANALYTICS_PKG_NAME).fatal(name);
-		}
-		else {
-			logger.pkg(_ANALYTICS_PKG_NAME).fatal(msg);
-		}		
-	}
+	// function __fatal(msg) {
+	// 	var name = '';
+	// 	if (typeof msg === 'object') {
+	// 		for(var key in msg){
+	// 			name+=key + ' ';
+	// 		}
+	// 		logger.state().metadata = msg;
+	// 		logger.pkg(_ANALYTICS_PKG_NAME).fatal(name);
+	// 	}
+	// 	else {
+	// 		logger.pkg(_ANALYTICS_PKG_NAME).fatal(msg);
+	// 	}		
+	// }
 
 	function __sendAllOtherLogs() {
     	// if(typeof(checkAutoSend) === "boolean"){
@@ -2676,10 +2706,10 @@ function setInitParams(params) {
 
     function __resetState() {
         state = __getStateDefaults();
-        analyticsLocalStorage.removeItem('__BMS_WEBLOG_LOGS__');
-        analyticsLocalStorage.removeItem('__BMS_WEBLOG_ANALYTICS__LIFECYCLE');
-        analyticsLocalStorage.removeItem('__BMS_WEBLOG_ANALYTICS__NETWORKTRANS');
-        analyticsLocalStorage.removeItem('__BMS_WEBLOG_CONFIG__');        
+        analyticsLocalStorage.removeItem(KEY_LOCAL_STORAGE_LOGS);//'__BMS_WEBLOG_LOGS__'
+        analyticsLocalStorage.removeItem(KEY_LOCAL_STORAGE_ANALYTICS_LIFECYCLE);//'__BMS_WEBLOG_ANALYTICS__LIFECYCLE'
+        analyticsLocalStorage.removeItem(KEY_LOCAL_STORAGE_ANALYTICS_NETWORKTRANS);//'__BMS_WEBLOG_ANALYTICS__NETWORKTRANS'
+        analyticsLocalStorage.removeItem(KEY_LOCAL_STORAGE_CONFIG);//'__BMS_WEBLOG_CONFIG__'        
         return this;
     };
     // logger
@@ -2695,12 +2725,6 @@ function setInitParams(params) {
         setLogLevel: __setLogLevel,
         getMaxLogStoreSize: __getMaxLogStoreSize,
         setMaxLogStoreSize: __setMaxLogStoreSize,
-        trace:__trace,
-        debug:__debug,
-        info:__info,
-        warn:__warn,
-        error:__error,
-        fatal:__fatal,
         send: __sendAllOtherLogs,
 
 		//testing:
@@ -2725,12 +2749,7 @@ function setInitParams(params) {
         };
     });
 
-	
-
-	
-	
-	
-	
+		
 	
 	//public API
 	return {
@@ -2746,11 +2765,9 @@ function setInitParams(params) {
 		setUserIdentity: _setUserIdentity,
 		log: _log,
 		Logger: logger,
-		_config:_config,
+		//_config:_config,
 		//Testing 
 		overrideServerhost: _setServerOverride,
-		
-
 	}
 
 }));
