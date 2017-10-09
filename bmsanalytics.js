@@ -1014,7 +1014,7 @@ function setInitParams(params) {
 //__________________________________________________________________________________________________
 // SERVICE PATHS AND DOMAINS
 	REQ_SEND_LOGS = '/analytics-service/rest/data/events/clientlogs/',
-	LOG_UPLOADER_APP_ROUTE='mobile-analytics-dashboard-dev';
+	LOG_UPLOADER_APP_ROUTE='mobile-analytics-dashboard';
 
 	// REGION_US_SOUTH_URL='.ng.bluemix.net',
 	// REGION_UK_URL='.eu-gb.bluemix.net',
