@@ -5,9 +5,9 @@
     } else {
         // Browser globals init
         root.BMSAnalytics = factory();
-        
+
     }
-    
+
 }(this,function(){
 
 (function(global) {
@@ -319,7 +319,7 @@
 		return new Deferred();
 	}
 })(window);
-	
+
 function printStackTrace(e){e=e||{guess:true};var t=e.e||null,n=!!e.guess;var r=new printStackTrace.implementation,i=r.run(t);return n?r.guessAnonymousFunctions(i):i}if(typeof module!=="undefined"&&module.exports){module.exports=printStackTrace}printStackTrace.implementation=function(){};printStackTrace.implementation.prototype={run:function(e,t){e=e||this.createException();t=t||this.mode(e);if(t==="other"){return this.other(arguments.callee)}else{return this[t](e)}},createException:function(){try{this.undef()}catch(e){return e}},mode:function(e){if(e["arguments"]&&e.stack){return"chrome"}else if(e.stack&&e.sourceURL){return"safari"}else if(e.stack&&e.number){return"ie"}else if(typeof e.message==="string"&&typeof window!=="undefined"&&window.opera){if(!e.stacktrace){return"opera9"}if(e.message.indexOf("\n")>-1&&e.message.split("\n").length>e.stacktrace.split("\n").length){return"opera9"}if(!e.stack){return"opera10a"}if(e.stacktrace.indexOf("called from line")<0){return"opera10b"}return"opera11"}else if(e.stack){return"firefox"}return"other"},instrumentFunction:function(e,t,n){e=e||window;var r=e[t];e[t]=function(){n.call(this,printStackTrace().slice(4));return e[t]._instrumented.apply(this,arguments)};e[t]._instrumented=r},deinstrumentFunction:function(e,t){if(e[t].constructor===Function&&e[t]._instrumented&&e[t]._instrumented.constructor===Function){e[t]=e[t]._instrumented}},chrome:function(e){var t=(e.stack+"\n").replace(/^\S[^\(]+?[\n$]/gm,"").replace(/^\s+(at eval )?at\s+/gm,"").replace(/^([^\(]+?)([\n$])/gm,"{anonymous}()@$1$2").replace(/^Object.<anonymous>\s*\(([^\)]+)\)/gm,"{anonymous}()@$1").split("\n");t.pop();return t},safari:function(e){return e.stack.replace(/\[native code\]\n/m,"").replace(/^(?=\w+Error\:).*$\n/m,"").replace(/^@/gm,"{anonymous}()@").split("\n")},ie:function(e){var t=/^.*at (\w+) \(([^\)]+)\)$/gm;return e.stack.replace(/at Anonymous function /gm,"{anonymous}()@").replace(/^(?=\w+Error\:).*$\n/m,"").replace(t,"$1@$2").split("\n")},firefox:function(e){return e.stack.replace(/(?:\n@:0)?\s+$/m,"").replace(/^[\(@]/gm,"{anonymous}()@").split("\n")},opera11:function(e){var t="{anonymous}",n=/^.*line (\d+), column (\d+)(?: in (.+))? in (\S+):$/;var r=e.stacktrace.split("\n"),i=[];for(var s=0,o=r.length;s<o;s+=2){var u=n.exec(r[s]);if(u){var a=u[4]+":"+u[1]+":"+u[2];var f=u[3]||"global code";f=f.replace(/<anonymous function: (\S+)>/,"$1").replace(/<anonymous function>/,t);i.push(f+"@"+a+" -- "+r[s+1].replace(/^\s+/,""))}}return i},opera10b:function(e){var t=/^(.*)@(.+):(\d+)$/;var n=e.stacktrace.split("\n"),r=[];for(var i=0,s=n.length;i<s;i++){var o=t.exec(n[i]);if(o){var u=o[1]?o[1]+"()":"global code";r.push(u+"@"+o[2]+":"+o[3])}}return r},opera10a:function(e){var t="{anonymous}",n=/Line (\d+).*script (?:in )?(\S+)(?:: In function (\S+))?$/i;var r=e.stacktrace.split("\n"),i=[];for(var s=0,o=r.length;s<o;s+=2){var u=n.exec(r[s]);if(u){var a=u[3]||t;i.push(a+"()@"+u[2]+":"+u[1]+" -- "+r[s+1].replace(/^\s+/,""))}}return i},opera9:function(e){var t="{anonymous}",n=/Line (\d+).*script (?:in )?(\S+)/i;var r=e.message.split("\n"),i=[];for(var s=2,o=r.length;s<o;s+=2){var u=n.exec(r[s]);if(u){i.push(t+"()@"+u[2]+":"+u[1]+" -- "+r[s+1].replace(/^\s+/,""))}}return i},other:function(e){var t="{anonymous}",n=/function\s*([\w\-$]+)?\s*\(/i,r=[],i,s,o=10;while(e&&e["arguments"]&&r.length<o){i=n.test(e.toString())?RegExp.$1||t:t;s=Array.prototype.slice.call(e["arguments"]||[]);r[r.length]=i+"("+this.stringifyArguments(s)+")";e=e.caller}return r},stringifyArguments:function(e){var t=[];var n=Array.prototype.slice;for(var r=0;r<e.length;++r){var i=e[r];if(i===undefined){t[r]="undefined"}else if(i===null){t[r]="null"}else if(i.constructor){if(i.constructor===Array){if(i.length<3){t[r]="["+this.stringifyArguments(i)+"]"}else{t[r]="["+this.stringifyArguments(n.call(i,0,1))+"..."+this.stringifyArguments(n.call(i,-1))+"]"}}else if(i.constructor===Object){t[r]="#object"}else if(i.constructor===Function){t[r]="#function"}else if(i.constructor===String){t[r]='"'+i+'"'}else if(i.constructor===Number){t[r]=i}}}return t.join(",")},sourceCache:{},ajax:function(e){var t=this.createXMLHTTPObject();if(t){try{t.open("GET",e,false);t.send(null);return t.responseText}catch(n){}}return""},createXMLHTTPObject:function(){var e,t=[function(){return new XMLHttpRequest},function(){return new ActiveXObject("Msxml2.XMLHTTP")},function(){return new ActiveXObject("Msxml3.XMLHTTP")},function(){return new ActiveXObject("Microsoft.XMLHTTP")}];for(var n=0;n<t.length;n++){try{e=t[n]();this.createXMLHTTPObject=t[n];return e}catch(r){}}},isSameDomain:function(e){return typeof location!=="undefined"&&e.indexOf(location.hostname)!==-1},getSource:function(e){if(!(e in this.sourceCache)){this.sourceCache[e]=this.ajax(e).split("\n")}return this.sourceCache[e]},guessAnonymousFunctions:function(e){for(var t=0;t<e.length;++t){var n=/\{anonymous\}\(.*\)@(.*)/,r=/^(.*?)(?::(\d+))(?::(\d+))?(?: -- .+)?$/,i=e[t],s=n.exec(i);if(s){var o=r.exec(s[1]);if(o){var u=o[1],a=o[2],f=o[3]||0;if(u&&this.isSameDomain(u)&&a){var l=this.guessAnonymousFunction(u,a,f);e[t]=i.replace("{anonymous}",l)}}}}return e},guessAnonymousFunction:function(e,t,n){var r;try{r=this.findFunctionName(this.getSource(e),t)}catch(i){r="getSource failed with url: "+e+", exception: "+i.toString()}return r},findFunctionName:function(e,t){var n=/function\s+([^(]*?)\s*\(([^)]*)\)/;var r=/['"]?([$_A-Za-z][$_A-Za-z0-9]*)['"]?\s*[:=]\s*function\b/;var i=/['"]?([$_A-Za-z][$_A-Za-z0-9]*)['"]?\s*[:=]\s*(?:eval|new Function)\b/;var s="",o,u=Math.min(t,20),a,f;for(var l=0;l<u;++l){o=e[t-l-1];f=o.indexOf("//");if(f>=0){o=o.substr(0,f)}if(o){s=o+s;a=r.exec(s);if(a&&a[1]){return a[1]}a=n.exec(s);if(a&&a[1]){return a[1]}a=i.exec(s);if(a&&a[1]){return a[1]}}}return"(?)"}}
 
 function __BMS() {}
@@ -416,7 +416,7 @@ BMS.Validators = {
      * Validates that each option attribute in the given options has a valid name and type. @Param options -
      * the options to validate. @Param validOptions - the valid options hash with their validators:
      * validOptions = { onSuccess : 'function', timeout : function(value){...} }
-     * 
+     *
      */
     validateOptions : function(validOptions, options, callerName) {
 	this.validateObjectProperties(validOptions, options, true, callerName);
@@ -428,7 +428,7 @@ BMS.Validators = {
      * explicitly defined in validOptions. If an option attribute does not exist in validOptions, it is simply
      * ignored @Param options - the options to validate. @Param validOptions - the valid options hash with
      * their validators: validOptions = { onSuccess : 'function', timeout : function(value){...} }
-     * 
+     *
      */
     validateOptionsLoose : function(validOptions, options, callerName) {
 	this.validateObjectProperties(validOptions, options, false, callerName);
@@ -439,7 +439,7 @@ BMS.Validators = {
      * the options to validate. @Param validOptions - the valid options hash with their validators:
      * validOptions = { onSuccess : 'function', timeout : function(value){...} } @Param strict - a boolean
      * indicating whether options' properties that don't exist in validOptions are allowed
-     * 
+     *
      */
     validateObjectProperties : function(validOptions, options, strict, callerName) {
 	if (!this.isValidationEnabled || typeof options === 'undefined') {
@@ -467,7 +467,7 @@ BMS.Validators = {
      * Validates that each option attribute in the given options is from the one of the validators type.
      * @Param options - the options to validate. @Param validatos - the valid types (in string format):
      * validators = ['string','null','undefined',someFunction,'boolean'...]
-     * 
+     *
      */
     validateAllOptionTypes : function(validators, options, callerName) {
 	if (!this.isValidationEnabled || typeof options === 'undefined') {
@@ -502,7 +502,7 @@ BMS.Validators = {
 	    this.logAndThrow("Invalid argument value '" + arg + "', expected null or 'string'.", callerName);
 	}
     },
-    
+
     validateNumberOrNull : function(arg, callerName) {
     	if (!this.isValidationEnabled) {
     	    return;
@@ -511,7 +511,7 @@ BMS.Validators = {
     	    this.logAndThrow("Invalid argument value '" + arg + "', expected null or 'number'.", callerName);
     	}
     },
-        
+
     validateBooleanOrNull : function(arg, callerName) {
 	if (!this.isValidationEnabled) {
 	    return;
@@ -520,7 +520,7 @@ BMS.Validators = {
 	    this.logAndThrow("Invalid argument value '" + arg + "', expected null or 'boolean'.", callerName);
 	}
     },
-    
+
     validateObjectOrNull : function(arg, callerName) {
 	if (!this.isValidationEnabled) {
 	    return;
@@ -535,12 +535,12 @@ BMS.Validators = {
     	    return;
     	}
 
-    	if ((typeof arg !== 'undefined') && (arg !== null) && (!Array.isArray(arg))) {	
+    	if ((typeof arg !== 'undefined') && (arg !== null) && (!Array.isArray(arg))) {
     		this.logAndThrow("Invalid argument value '" + arg + "', expected null or 'array'.", callerName);
     	}
-    	
+
     },
-        
+
     validateFunctionOrNull : function(arg, callerName) {
 	if (!this.isValidationEnabled) {
 	    return;
@@ -621,7 +621,7 @@ __BMSConfig = function() {
     var serverOverride;
     var serverRelativeTime;
     var instanceId;
-    
+
     this.__getClientApiKey= function() {
     	return clientApiKey;
 
@@ -663,7 +663,7 @@ __BMSConfig = function() {
         BMS.Validators.validateDefined(app, '__setApplicationName');
         applicationName = app;
     };
-    
+
     this.__getClientPlatform = function () {
         return 'web';
     };
@@ -685,31 +685,8 @@ __BMSConfig = function() {
     };
 
 
-    
-    // this.__getContext = function () {
-    //     return contextRoot;
-    // };
 
-    // this.__setContext = function (ctx) {
-    //     contextRoot = ctx;
-    // };
 
-    
-
-    // this.__getbmsRegion =function (){
-    // 	return bmsRegion;
-    // };
-
-    // this.__setbmsRegion =function (bmsregion){
-    // 	bmsRegion=bmsregion;
-    // }; 
-    // this.__setServerOverride= function(serveroverride){
-    // 	serverOverride=serveroverride;
-    // };
-
-    // this.__getServerOverride= function(){
-    // 	return serverOverride;
-    // };
 };
 
 //+++
@@ -846,7 +823,7 @@ __BMSVarStorageDB = function() {
 		delete storage[finalKey];
 	};
 
-	
+
 	 // Builds the key with the appName prefeix
 	function buildKey(key) {
 		return appNamePrefix + '.' + key;
@@ -859,7 +836,7 @@ __BMSDAO = function() {
 
 	/**
 	 * Initializes the database and verifies it is accessible
-	 * 
+	 *
 	 * @returns {*}
 	 */
 	this.init = function() {
@@ -880,7 +857,7 @@ __BMSDAO = function() {
 
 	/**
 	 * Sets an item in the database
-	 * 
+	 *
 	 * @param key
 	 * @param value
 	 * @param options
@@ -895,7 +872,7 @@ __BMSDAO = function() {
 
 	/**
 	 * Gets an item in the database
-	 * 
+	 *
 	 * @param key
 	 * @param options
 	 *            {{session : boolean, global : boolean}}
@@ -907,7 +884,7 @@ __BMSDAO = function() {
 
 	/**
 	 * Removes an item in the database
-	 * 
+	 *
 	 * @param key
 	 * @param options
 	 *            {{session : boolean, global : boolean}}
@@ -937,7 +914,7 @@ __BMSBrowserManager = function() {
 
         // BrowserID should be saved cross applications
         var globalOptions = {'global' : true};
-        
+
         var uniqueId = BMS.DAO.getItem(key, globalOptions);
         if(BMS.Validators.isNullOrUndefined(uniqueId)) {
             uniqueId = generateGUID();
@@ -1033,16 +1010,15 @@ function setInitParams(params) {
 	KEY_REMOTE_STORAGE_CONFIG = '__BMS_WEBLOG_REMOTE_CONFIG__',
 	DEFAULT_MAX_STORAGE_SIZE = 500000,
 	BUFFER_TIME_IN_MILLISECONDS = 60000,
-	
+
 //__________________________________________________________________________________________________
-// SERVICE PATHS AND DOMAINS	
+// SERVICE PATHS AND DOMAINS
 	REQ_SEND_LOGS = '/analytics-service/rest/data/events/clientlogs/',
-	LOG_UPLOADER_APP_ROUTE='mobile-analytics-dashboard';
-	
-	REGION_US_SOUTH_URL='.ng.bluemix.net',
-	REGION_UK_URL='.eu-gb.bluemix.net',
-	REGION_SYDNEY_URL='.au-syd.bluemix.net',
-	REGION_GERMANY_URL='.eu-de.bluemix.net',
+	LOG_UPLOADER_APP_ROUTE='mobile-analytics-dashboard-dev';
+
+	// REGION_US_SOUTH_URL='.ng.bluemix.net',
+	// REGION_UK_URL='.eu-gb.bluemix.net',
+	// REGION_SYDNEY_URL='.au-syd.bluemix.net',
 //__________________________________________________________________________________________________
 
 
@@ -1075,7 +1051,7 @@ function setInitParams(params) {
 	var LEFT_BRACKET = '[';
 	var RIGHT_BRACKET = '] '; //There's a space at the end.
 	var _ANALYTICS_PKG_NAME = 'bms.analytics';
-    
+
 	var metadataHeader = {};
 	var startupTime = 0;
 	var appSessionID = generateUUID('new');
@@ -1132,7 +1108,7 @@ function setInitParams(params) {
 
 	(function(){
 	})();
-	
+
 	/*
 	 * PRIVATE METHODS
 	 */
@@ -1166,11 +1142,11 @@ function setInitParams(params) {
 
 		return uuid;
 	};
-	
+
 	var getTrackingId = function () {
 		return generateUUID();
 	};
-	
+
 	function initXHR(XHR, analytics) {
 		"use strict";
 		var open = XHR.prototype.open;
@@ -1185,7 +1161,7 @@ function setInitParams(params) {
 				send.call(this, data);
 				return;
 			}
-			
+
 			var oldOnReadyStateChange;
 			var url = this._url;
 			var track = logOutboundRequest(this);
@@ -1205,7 +1181,7 @@ function setInitParams(params) {
 				this.setRequestHeader("x-mfp-analytics-metadata", JSON.stringify(metadataHeader));
 				this.setRequestHeader("x-mfp-analytics-api-key", clientApiKey);
 			}
-				
+
 			function onReadyStateChange() {
 				if(self.readyState == 4 /* complete */) {
 					/* This is where you can put code that you want to execute post-complete*/
@@ -1220,21 +1196,21 @@ function setInitParams(params) {
 			}
 
 			/* Set xhr.noIntercept to true to disable the interceptor for a particular call */
-			if(!this.noIntercept) {            
+			if(!this.noIntercept) {
 				if(this.addEventListener) {
 					this.addEventListener("readystatechange", onReadyStateChange, false);
 				} else {
-					oldOnReadyStateChange = this.onreadystatechange; 
+					oldOnReadyStateChange = this.onreadystatechange;
 					this.onreadystatechange = onReadyStateChange;
 				}
 			}
-			//console.log('send');	
+			//console.log('send');
 			send.call(this, data);
 		}
-	}; 
+	};
 
 
-	
+
 
 	var __send = function(keys) {
 		return new Promise(function (resolve, reject) {
@@ -1244,8 +1220,9 @@ function setInitParams(params) {
             	resolve('There were no persisted logs to send');
             	return;
         	}
-        //* console.log('inside send');     		
-		__ajax(data, REQ_SEND_LOGS)
+
+
+        __ajax(data, REQ_SEND_LOGS)
 			.then(function (response) {
 				emptyLogs(keys);
 				//logInboundForSendResponse(response[0]);
@@ -1257,51 +1234,49 @@ function setInitParams(params) {
 			  reject('analytics: Call failed, server returned: ' + err.statusText);
 			});
 	  	});
-    	  
+
       };
 
     var __ajax = function(data,path,method) {
-    	  
+
     	return new Promise(function (resolve, reject) {
 			var xhr = new XMLHttpRequest();
 			if (method == null){
 				method = 'POST'
 			}
 
-			var url='';
+			bmsRegion=BMSClient.getRegion();
+			var url='https://'+LOG_UPLOADER_APP_ROUTE+bmsRegion;
 
 			//Addition
-			if(bmsRegion==0)
-			{
-				url='https://'+LOG_UPLOADER_APP_ROUTE+REGION_US_SOUTH_URL;
-			}
-			else if(bmsRegion==1)
-			{
-				url='https://'+LOG_UPLOADER_APP_ROUTE+REGION_UK_URL;
-			}
-			else if(bmsRegion==2) 
-			{
-				url='https://'+LOG_UPLOADER_APP_ROUTE+REGION_SYDNEY_URL;;	
-			}
-			else if(bmsRegion==3)
- 			{	
- 				url='https://'+LOG_UPLOADER_APP_ROUTE+REGION_GERMANY_URL;
- 			}
-			else
-			{
-			}
+			// if(bmsRegion==0)
+			// {
+			// 	url='https://'+LOG_UPLOADER_APP_ROUTE+REGION_US_SOUTH_URL;
+			// }
+			// else if(bmsRegion==1)
+			// {
+			// 	url='https://'+LOG_UPLOADER_APP_ROUTE+REGION_UK_URL;
+			// }
+			// else if(bmsRegion==2)
+			// {
+			// 	url='https://'+LOG_UPLOADER_APP_ROUTE+REGION_SYDNEY_URL;;
+			// }
+			// else
+			// {
+			// }
+
 
 			if(serveroverride!='')
 			{
 				url='http://'+serveroverride;
 			}
 
-			//xhr.open(method,path,true); 
-			xhr.open(method,url+path+"?instanceId="+instanceId,true);// 
-			
+			//xhr.open(method,path,true);
+			xhr.open(method,url+path+"?instanceId="+instanceId,true);//
+
 			xhr.onload = function () {
 			  if (this.status >= 200 && this.status < 300) {
-				resolve([xhr.networkMetadata,xhr.response]);				
+				resolve([xhr.networkMetadata,xhr.response]);
 			  } else {
 				reject({
 				  status: this.status,
@@ -1317,9 +1292,9 @@ function setInitParams(params) {
 			};
 			xhr.send(data);
 	  	});
-    	  
+
       };
-      
+
     var logOutboundRequest = function (request) {
 			try{
 			    if (!request.trackingId) {
@@ -1329,22 +1304,22 @@ function setInitParams(params) {
 					return false;
 				}
 				var outboundTimestamp = new Date().getTime();
-	
+
 				var metadata = {
 					'$category' : 'network',
 					'$trackingid' : request.trackingId,
 					'$outboundTimestamp' : outboundTimestamp
 				};
-				
+
 				var logMetadata = {
 					'$class':'bms.analytics.xhrInterceptor',
 					'$file':'bmsanalytics.js',
 					'$method':'	intercept',
 					'$src':'javascript'
-				};		
-				
+				};
+
 				request.networkMetadata = metadata;
-				
+
 				var logData = {
 				 'pkg': 'bms.analytics',
 				 'timestamp': new Date().getTime(),
@@ -1352,37 +1327,37 @@ function setInitParams(params) {
 				 'msg': 'InternalRequestSender outbound',
 				 'metadata': logMetadata
 				};
-				
+
 				__persistLog(logData, KEY_LOCAL_STORAGE_ANALYTICS_NETWORKTRANS);
     			return true;
-				
+
 			}catch(e){
 				// Do nothing
 			}
 	};
-	
+
 
 	var logInboundResponse = function (request) {
-		
+
 			try{
 				var trackingId = request.trackingId;
-				
-				if(trackingId){					
+
+				if(trackingId){
 					var inboundTimestamp = new Date().getTime();
 					var numBytes = 0;
 					var responseText = '';//response.responseJSON;TODO
-					
+
 					/*jshint maxdepth:4*/
 					if(responseText){
 						numBytes = JSON.stringify(responseText).length;
 					}
-					
+
 					var metadata = request.networkMetadata;
-					
+
 					if(metadata !== null){
 						var outboundTimestamp = metadata['$outboundTimestamp'];
 						var roundTripTime = inboundTimestamp - outboundTimestamp;
-							
+
 						metadata['$inboundTimestamp'] = inboundTimestamp;
 						metadata['$bytesReceived'] = numBytes;
 						metadata['$roundTripTime'] = roundTripTime;
@@ -1393,12 +1368,12 @@ function setInitParams(params) {
 						}
 						metadata['$requestMethod'] = method;
 						metadata['$path'] = request.responseURL;
-						
+
 						request.networkMetadata = metadata;
 
 					}
-					
-					
+
+
 					var logData = {
 					 'pkg': 'bms.analytics',
 					 'timestamp': new Date().getTime(),
@@ -1411,11 +1386,11 @@ function setInitParams(params) {
 			}catch(e){
 			}
 	};
-	
-	
+
+
 	var logInboundForSendResponse = function (metadata) {
 			try{
-				
+
 				var logData = {
 				 'pkg': 'bms.analytics',
 				 'timestamp': new Date().getTime(),
@@ -1424,7 +1399,7 @@ function setInitParams(params) {
 				 'metadata': metadata
 				};
 				__persistLog(logData, KEY_LOCAL_STORAGE_ANALYTICS_NETWORKTRANS);
-				
+
 			}catch(e){
 				console.error('analytics: Failed to log event');
 			}
@@ -1466,7 +1441,7 @@ function setInitParams(params) {
     		var stringified = JSON.stringify(log);
     		var persistedLogs = analyticsLocalStorage.getItem(key);
     		console.log('__persistLog() '+key+': '+stringified);
-    		
+
     		if(persistedLogs === null){
     			persistedLogs = stringified;
     		}else{
@@ -1492,7 +1467,7 @@ function setInitParams(params) {
     		}
     	};
 
-    
+
       /*
     	* UTILITY METHODS
        */
@@ -1782,7 +1757,7 @@ function setInitParams(params) {
 			   return "(?)"
 		   }
 	   };
-   
+
 		function __fileSizeReached(key){
 			var persistedLogs = analyticsLocalStorage.getItem(key);
 			if(persistedLogs === null) {
@@ -1829,7 +1804,7 @@ function setInitParams(params) {
         };
     };
 
-    
+
 
     function __getLogArgArray(args, priority, pkg) {
 
@@ -1874,7 +1849,7 @@ function setInitParams(params) {
 				return line;
 			}
 		}
-		return "";	
+		return "";
 	}
 
 	function formatStackLine(stackLine){
@@ -2031,12 +2006,12 @@ function setInitParams(params) {
         }
         return false;
     };
-    
+
     function __getCurrentPackageFilterLevel(pkg){
     	var configFilters = state.filtersFromServer || state.filters;
     	if (pkg == null){
     		pkg = '';
-    	} 
+    	}
 		for (var i in configFilters) {
     		if (configFilters[i].name === pkg){
 				return configFilters[i].level	;
@@ -2075,10 +2050,10 @@ function setInitParams(params) {
         }
         if (!state.stringify && str.length > 0) {
         	args.unshift(str);
-        	
+
         }
 
-        
+
         // Queue for later sending
          var logArgArray = __getLogArgArray(args, priority, pkg)
          var state = __state();
@@ -2173,7 +2148,7 @@ function setInitParams(params) {
 			state = newState;
 		}
    };
-      
+
     function __extend(){
 		for(var i=1; i<arguments.length; i++)
 			for(var key in arguments[i])
@@ -2238,12 +2213,12 @@ function setInitParams(params) {
 		state.metadata = meta2;
     	_pkg('bms.analytics');
     	__log('analytics: detected an error (Uncaught Exception)','FATAL');
-    	
+
     	//send immediately
     	__sendAll();
 	};
-	
-	
+
+
 	function _logUserAnalyticsStart() {
 		var meta = {
     	'$category' : 'initialCtx',
@@ -2254,7 +2229,7 @@ function setInitParams(params) {
     	_pkg('bms.analytics');
     	__log('appSession','ANALYTICS','LIFECYCLE');
 	}
-	
+
 	function _logUserAnalytics() {
 		var meta = {
     	'$category' : 'userSwitch',
@@ -2265,7 +2240,7 @@ function setInitParams(params) {
     	_pkg('bms.analytics');
     	__log('appSession','ANALYTICS','LIFECYCLE');
 	};
-	
+
 	function logAnalyticsSessionStart() {
 	    appSessionID = generateUUID('new');
 	    _logUserAnalyticsStart();
@@ -2277,7 +2252,7 @@ function setInitParams(params) {
     	_pkg('bms.analytics');
     	__log('appSession','ANALYTICS','LIFECYCLE');
 	};
-	
+
 	function logAnalyticsSessionStop() {
 	    var duration = new Date().getTime() - startupTime;
         _logUserAnalytics();
@@ -2290,7 +2265,7 @@ function setInitParams(params) {
     	console.log("****logAnalyticsSessionStop "+appSessionID);
     	appSessionID = generateUUID('new');
     	console.log("****logAnalyticsSessionStop "+appSessionID);
-    	
+
     	state.metadata = meta;
     	_pkg('bms.analytics');
     	__log('appSession','ANALYTICS','LIFECYCLE');
@@ -2329,19 +2304,19 @@ function setInitParams(params) {
 		else if ((verOffset=nAgt.indexOf("MSIE"))!=-1) {
 		   browserName = "Microsoft Internet Explorer";
 		}
-		// In Chrome, the true version is after "Chrome" 
+		// In Chrome, the true version is after "Chrome"
 		else if ((verOffset=nAgt.indexOf("Chrome"))!=-1) {
  	  		browserName = "Chrome";
 		}
-		// In Safari, the true version is after "Safari" or after "Version" 
+		// In Safari, the true version is after "Safari" or after "Version"
 		else if ((verOffset=nAgt.indexOf("Safari"))!=-1) {
 	   		browserName = "Safari";
 		}
-		// In Firefox, the true version is after "Firefox" 
+		// In Firefox, the true version is after "Firefox"
 		else if ((verOffset=nAgt.indexOf("Firefox"))!=-1) {
 	    	browserName = "Firefox";
 		}
-		// In most other browsers, "name/version" is at the end of userAgent 
+		// In most other browsers, "name/version" is at the end of userAgent
 		else if ( (nameOffset=nAgt.lastIndexOf(' ')+1) < (verOffset=nAgt.lastIndexOf('/')) ) {
 	    	browserName = nAgt.substring(nameOffset,verOffset);
 		}
@@ -2375,7 +2350,7 @@ function setInitParams(params) {
         // bmsregion=BMS.Config.__getbmsRegion();
         // serveroverride=BMS.Config.__getServerOverride();
         instanceId=BMS.Config.__getInstanceId();
-    	
+
 
         //**************************************
     	startupTime = new Date().getTime();
@@ -2396,8 +2371,8 @@ function setInitParams(params) {
 		if(deviceevents!=null && deviceevents>=0 && deviceevents<=3)
 		{
 			current_set_DeviceEvent=deviceevents;
-		}    	
-    	
+		}
+
     	metadataHeader.contextRoot = "/analytics-service";
     	metadataHeader.deviceID = "Undefined";
     	if (deviceID != null && deviceID != ''){
@@ -2409,7 +2384,7 @@ function setInitParams(params) {
     	if (appName != null && appName != ''){
     		metadataHeader.mfpAppName = appName;
     	}
-    	
+
     	analyticsLocalStorage.init(metadataHeader.mfpAppName);
 		try {
 			if (typeof(Storage) !== 'undefined') {
@@ -2421,64 +2396,59 @@ function setInitParams(params) {
 				}else{
 					configurationString = analyticsLocalStorage.getItem(KEY_REMOTE_STORAGE_CONFIG);
 				}
-				
+
 				if (configurationString === null){
 				  var state = __state();
 				  state.maxFileSize = DEFAULT_MAX_STORAGE_SIZE;
 				  __updateState(state);
-				
+
 				  var stateString = JSON.stringify(state);
 				  analyticsLocalStorage.setItem(KEY_LOCAL_STORAGE_CONFIG, stateString);
 				} else {
 				  var configuration = JSON.parse(configurationString);
 				  __updateState(configuration);
-				
+
 				}
 			}
 		} catch ( err ) {
 			return console.error(err.message);
 		}
-    	
+
     	if (userID == '') {
     		userID = metadataHeader.deviceID;
     	}
 		metadataHeader.os = "web";  // MFP
 		metadataHeader.osVersion =  navigator.platform;  // human-readable o/s version; like "MacIntel"
-		metadataHeader.brand = navigator.appVersion;  // human-readable brand; 
+		metadataHeader.brand = navigator.appVersion;  // human-readable brand;
 		metadataHeader.model = browserName();  // human-readable model; like "Chrome"
 		metadataHeader.appVersionDisplay = metadataHeader.mfpAppVersion;  // human readable display version
 		metadataHeader.appVersionCode = metadataHeader.mfpAppVersion;  // version as known to the app store
 		metadataHeader.appStoreId = metadataHeader.mfpAppName; // app pkg name (e.g. com.ibm.MyApp)
-		metadataHeader.appStoreLabel = metadataHeader.mfpAppName; 
-		
+		metadataHeader.appStoreLabel = metadataHeader.mfpAppName;
+
 		console.log('_init'+logger.getLogLevel());
-    	
+
     	initXHR(XMLHttpRequest, this);
 
     	//********************************
     	dfd.resolve();
     	return dfd.promise();
-
-
     };
 
-    var client={
-    	REGION_US_SOUTH:0,
-    	REGION_UK:1,
-    	REGION_SYDNEY:2,
-    	REGION_GERMANY:3,
+    // var client={
+    // 	REGION_US_SOUTH:'.ng.bluemix.net',
+    // 	REGION_UK:'.eu-gb.bluemix.net',
+    // 	REGION_SYDNEY:'.au-syd.bluemix.net',
+
+    // 	initialize : function(region){
+    // 		bmsRegion=region;
+    // 	}
+
+    // };
 
 
-    	initialize : function(region){
-    		if(region<0 || region >3){  BMS.Validators.logAndThrow("Invalid region");}
-    		bmsRegion=region;
-    	}
 
-    };
-
-   
-
-    // Internal Testing 
+    // Internal Testing
     var _setServerOverride=function (serveraddr){
     	serveroverride=serveraddr;
     };
@@ -2500,7 +2470,7 @@ function setInitParams(params) {
     //public analytics
     var _isEnabled = function () {
 		var currentLoggerState = logger.state();
-		return currentLoggerState.analyticsCapture;		
+		return currentLoggerState.analyticsCapture;
 	};
 
 	//public analytics
@@ -2529,9 +2499,9 @@ function setInitParams(params) {
     function _setUserIdentity(user) {
     	if(hasUsercontext==true){
     		logAnalyticsSessionStop();
-	    	userID = user;	
+	    	userID = user;
     	}
-	    
+
 	};
 
 	//public analytics
@@ -2547,16 +2517,16 @@ function setInitParams(params) {
 		}
 		else {
 			logger.pkg(_ANALYTICS_PKG_NAME).analytics(msg);
-		}		
+		}
 	}
-	
+
 	//public logger Apis
 
 	function _pkg(pkgName) {
 
 		if (state.pkg != null){
 		    state.pkg = pkgName;
-		}    	
+		}
     	return this;
     };
 
@@ -2575,7 +2545,7 @@ function setInitParams(params) {
     function __isStoringLogs(){
     	var state=__state();
 		console.log("__isStoringLogs"+ state.capture);
-		
+
 		if(typeof(state.capture)==='boolean') return state.capture;
 		else return true;
 	}
@@ -2601,7 +2571,7 @@ function setInitParams(params) {
 
     function __setMaxLogStoreSize(maxstorage){
     		 var state = __state();
-    		 state.maxFileSize = DEFAULT_MAX_STORAGE_SIZE;			 
+    		 state.maxFileSize = DEFAULT_MAX_STORAGE_SIZE;
     		 if(typeof(maxstorage)==="number"){
     		 state.maxFileSize = maxstorage;
 			 }
@@ -2609,91 +2579,7 @@ function setInitParams(params) {
 
     }
 
- //    function __trace(msg) {
-	// 	var name = '';
-	// 	if (typeof msg === 'object') {
-	// 		for(var key in msg){
-	// 			name+=key + ' ';
-	// 		}
-	// 		logger.state().metadata = msg;
-	// 		logger.pkg(_ANALYTICS_PKG_NAME).trace(name);
-	// 	}
-	// 	else {
-	// 		logger.pkg(_ANALYTICS_PKG_NAME).trace(msg);
-	// 	}		
-	// }
 
-
-	// function __debug(msg) {
-	// 	var name = '';
-	// 	if (typeof msg === 'object') {
-	// 		for(var key in msg){
-	// 			name+=key + ' ';
-	// 		}
-	// 		logger.state().metadata = msg;
-	// 		logger.pkg(_ANALYTICS_PKG_NAME).debug(name);
-	// 	}
-	// 	else {
-	// 		logger.pkg(_ANALYTICS_PKG_NAME).debug(msg);
-	// 	}		
-	// }
-
-
-	// function __info(msg) {
-	// 	var name = '';
-	// 	if (typeof msg === 'object') {
-	// 		for(var key in msg){
-	// 			name+=key + ' ';
-	// 		}
-	// 		logger.state().metadata = msg;
-	// 		logger.pkg(_ANALYTICS_PKG_NAME).info(name);
-	// 	}
-	// 	else {
-	// 		logger.pkg(_ANALYTICS_PKG_NAME).info(msg);
-	// 	}		
-	// }
-
-	// function __warn(msg) {
-	// 	var name = '';
-	// 	if (typeof msg === 'object') {
-	// 		for(var key in msg){
-	// 			name+=key + ' ';
-	// 		}
-	// 		logger.state().metadata = msg;
-	// 		logger.pkg(_ANALYTICS_PKG_NAME).warn(name);
-	// 	}
-	// 	else {
-	// 		logger.pkg(_ANALYTICS_PKG_NAME).warn(msg);
-	// 	}		
-	// }
-
-	// function __error(msg) {
-	// 	var name = '';
-	// 	if (typeof msg === 'object') {
-	// 		for(var key in msg){
-	// 			name+=key + ' ';
-	// 		}
-	// 		logger.state().metadata = msg;
-	// 		logger.pkg(_ANALYTICS_PKG_NAME).error(name);
-	// 	}
-	// 	else {
-	// 		logger.pkg(_ANALYTICS_PKG_NAME).error(msg);
-	// 	}		
-	// }
-
-	// function __fatal(msg) {
-	// 	var name = '';
-	// 	if (typeof msg === 'object') {
-	// 		for(var key in msg){
-	// 			name+=key + ' ';
-	// 		}
-	// 		logger.state().metadata = msg;
-	// 		logger.pkg(_ANALYTICS_PKG_NAME).fatal(name);
-	// 	}
-	// 	else {
-	// 		logger.pkg(_ANALYTICS_PKG_NAME).fatal(msg);
-	// 	}		
-	// }
 
 	function __sendAllOtherLogs() {
     	// if(typeof(checkAutoSend) === "boolean"){
@@ -2709,7 +2595,7 @@ function setInitParams(params) {
         analyticsLocalStorage.removeItem(KEY_LOCAL_STORAGE_LOGS);//'__BMS_WEBLOG_LOGS__'
         analyticsLocalStorage.removeItem(KEY_LOCAL_STORAGE_ANALYTICS_LIFECYCLE);//'__BMS_WEBLOG_ANALYTICS__LIFECYCLE'
         analyticsLocalStorage.removeItem(KEY_LOCAL_STORAGE_ANALYTICS_NETWORKTRANS);//'__BMS_WEBLOG_ANALYTICS__NETWORKTRANS'
-        analyticsLocalStorage.removeItem(KEY_LOCAL_STORAGE_CONFIG);//'__BMS_WEBLOG_CONFIG__'        
+        analyticsLocalStorage.removeItem(KEY_LOCAL_STORAGE_CONFIG);//'__BMS_WEBLOG_CONFIG__'
         return this;
     };
     // logger
@@ -2741,7 +2627,7 @@ function setInitParams(params) {
         __setState(__extend({},options || {}));
         return this;
     };
-    
+
 
 	__getKeys(priorities).forEach(function (idx) {
         logger[idx] = function () {
@@ -2749,12 +2635,16 @@ function setInitParams(params) {
         };
     });
 
-		
-	
+
+
 	//public API
+
+
+
+
 	return {
 	    initialize: _init,
-	    Client:client,
+	    //Client:client,
 	    DeviceEvents:deviceEvents,
 		enable : _enable,
 		disable :_disable,
@@ -2766,8 +2656,9 @@ function setInitParams(params) {
 		log: _log,
 		Logger: logger,
 		//_config:_config,
-		//Testing 
+		//Testing
 		overrideServerhost: _setServerOverride,
 	}
+
 
 }));

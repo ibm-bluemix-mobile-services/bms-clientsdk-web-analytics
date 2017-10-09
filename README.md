@@ -20,23 +20,28 @@
   ```Javascript
   require.config({
     'paths': {
-        'bmsanalytics': '/path/to/bmsanalytics.js'
-      }
+        'BMSAnalytics': '../bms-clientsdk-web-analytics/bmsanalytics',
+        'BMSRequest': '../bms-clientsdk-web-analytics/bmsrequest',
+        'BMSClient': '../bms-clientsdk-web-analytics/bmsclient'
+    }
   });
 
-  require(['bmsanalytics'], function(BMSAnalytics) {
-     BMSAnalytics.send();
+  require(['BMSAnalytics','BMSRequest','BMSClient'], function(BMSAnalytics) {
+    var applicationName = 'com.ibm.bmsstarterweb';
+    var clientApiKey='2bd5ad2a-ff2a-459c-bf0a-9d2ec90a538e';
+    var bmsregion=BMSClient.REGION_US_SOUTH; // REGION_UK (for Region United Kingdom)/ REGION_SYDNEY ( for Region Sydney)
+    var deviceEvents=BMSAnalytics.DeviceEvents.ALL;  //BMSAnalytics.DeviceEvents.(NONE/ LIFECYCLE /NETWORK )
+    var instanceId = 'e22cf008-5c12-4662-9249-b74102c92dee';
+    var hasUserContext=true;
+
+    BMSClient.initialize(BMSClient.REGION_US_SOUTH);
+    BMSAnalytics.initialize(applicationName,clientApiKey,hasUserContext,deviceEvents,instanceId);
+    BMSAnalytics.send();
+    
   }
   ```
   
-  Example usage on global context:
-  -----------------------------------
-  ```Html
-  <script src="bmsanalytics.js"></script>
-  <script>
-    BMSAnalytics.send();
-  </script>
-  ```
+ 
 ## bms-analytics-web-clientsdk-sampleapp
 Starter web app code  to connect with Bluemix Mobile Analytics  Service.
 
