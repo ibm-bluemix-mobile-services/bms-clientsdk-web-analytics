@@ -1,18 +1,18 @@
 require.config({
     'paths': {
-        'BMSAnalytics': '../bms-clientsdk-web-analytics/bmsanalytics',
-        'BMSRequest': '../bms-clientsdk-web-analytics/bmsrequest',
-        'BMSClient': '../bms-clientsdk-web-analytics/bmsclient'
+        'BMSAnalytics': '../../../bmsanalytics',
+        'BMSRequest': '../../../bms-clientsdk-web-analytics/bmsrequest',
+        'BMSClient': '../../../bms-clientsdk-web-analytics/bmsclient'
     }
 });
 
 require(['BMSAnalytics','BMSRequest','BMSClient'], function(BMSAnalytics) {
 
     var applicationName = 'com.ibm.mfpstarterweb';
-    var clientApiKey='587f41d8-32ef-491f-9519-b638c60f0fcd';//'2bd5ad2a-ff2a-459c-bf0a-9d2ec90a538e';
+    var clientApiKey='587f41d8-32ef-491f-9519-b638c60f0fcd';
     var bmsregion=BMSClient.REGION_US_SOUTH; // REGION_UK (for Region United Kingdom)/ REGION_SYDNEY ( for Region Sydney)
     var deviceEvents=BMSAnalytics.DeviceEvents.ALL;  //BMSAnalytics.DeviceEvents.(NONE/ LIFECYCLE /NETWORK )
-    var instanceId = 'e22cf008-5c12-4662-9249-b74102c92dee';//'authorized';
+    var instanceId = 'e22cf008-5c12-4662-9249-b74102c92dee';
     var hasUserContext=true;
 
     BMSClient.initialize(BMSClient.REGION_US_SOUTH);
