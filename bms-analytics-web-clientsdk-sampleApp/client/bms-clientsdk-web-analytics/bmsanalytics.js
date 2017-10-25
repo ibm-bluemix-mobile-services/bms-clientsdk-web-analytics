@@ -1153,6 +1153,7 @@ function setInitParams(params) {
 		var send = XHR.prototype.send;
 		XHR.prototype.open = function(method, url, async, user, pass) {
 			this._url = url;
+			this._method = method;
 			open.call(this, method, url, async, user, pass);
 		};
 		XHR.prototype.send = function(data) {
@@ -1164,6 +1165,7 @@ function setInitParams(params) {
 
 			var oldOnReadyStateChange;
 			var url = this._url;
+			var method =this._method;
 			var track = logOutboundRequest(this);
 			if (track) {
 				var duration = new Date().getTime() - startupTime;
@@ -1225,7 +1227,7 @@ function setInitParams(params) {
         __ajax(data, REQ_SEND_LOGS)
 			.then(function (response) {
 				emptyLogs(keys);
-				//logInboundForSendResponse(response[0]);
+				logInboundForSendResponse(response[0]);
 				console.log('analytics: Client logs successfully sent to the server');
 				resolve('Log was successfully sent');
 			})
@@ -1366,7 +1368,7 @@ function setInitParams(params) {
 						if(request.requestOptions != null){
 							 var method = request.requestOptions.method;
 						}
-						metadata['$requestMethod'] = method;
+						metadata['$requestMethod'] = request._method;
 						metadata['$path'] = request.responseURL;
 
 						request.networkMetadata = metadata;
