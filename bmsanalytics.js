@@ -1,14 +1,17 @@
-(function (root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD init. No dependencies
-        define(factory);
-    } else {
-        // Browser globals init
-        root.BMSAnalytics = factory();
+	// (function (root, factory) {
+	//     if (typeof define === 'function' && define.amd) {
+	//         // AMD init. No dependencies
+	//         console.log("abcde");
+	//         define(factory);
+	//     } 
+	//     //else {
+	//     //     // Browser globals init
+	//     //     root.BMSAnalytics = factory();
 
-    }
+	//     // }
 
-}(this,function(){
+	// }(this,
+var BMSAnalytics=(function(){
 
 (function(global) {
 	function isArray(arr) {
@@ -1316,7 +1319,7 @@ function setInitParams(params) {
 				var logMetadata = {
 					'$class':'bms.analytics.xhrInterceptor',
 					'$file':'bmsanalytics.js',
-					'$method':'	intercept',
+					'$method':'intercept',
 					'$src':'javascript'
 				};
 
@@ -2264,10 +2267,8 @@ function setInitParams(params) {
     	 '$closedBy' : 'user',
     	 '$appSessionID' : appSessionID
     	};
-    	console.log("****logAnalyticsSessionStop "+appSessionID);
     	appSessionID = generateUUID('new');
-    	console.log("****logAnalyticsSessionStop "+appSessionID);
-
+    	
     	state.metadata = meta;
     	_pkg('bms.analytics');
     	__log('appSession','ANALYTICS','LIFECYCLE');
@@ -2428,10 +2429,11 @@ function setInitParams(params) {
 		metadataHeader.appStoreId = metadataHeader.mfpAppName; // app pkg name (e.g. com.ibm.MyApp)
 		metadataHeader.appStoreLabel = metadataHeader.mfpAppName;
 
-		console.log('_init'+logger.getLogLevel());
-
+		
     	initXHR(XMLHttpRequest, this);
 
+
+    	console.log("_initXHR"+JSON.stringify(this));
     	//********************************
     	dfd.resolve();
     	return dfd.promise();
@@ -2581,8 +2583,6 @@ function setInitParams(params) {
 
     }
 
-
-
 	function __sendAllOtherLogs() {
     	// if(typeof(checkAutoSend) === "boolean"){
     	// 	if(checkAutoSend === true){
@@ -2663,4 +2663,4 @@ function setInitParams(params) {
 	}
 
 
-}));
+})();

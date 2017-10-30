@@ -15,6 +15,22 @@ BMSRequest.TRACE = "TRACE";
 BMSRequest.HEAD = "HEAD";
 BMSRequest.OPTIONS = "OPTIONS";
 
+function generateUUID(newSession) {
+        "use strict";
+
+        var d = new Date().getTime();
+        var uuid = '';
+        var generate = function(c) {
+            var r = (d + Math.random()*16)%16 | 0;
+            d = Math.floor(d/16);
+            return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+        };
+        
+            uuid = 'xxxxxxxx-xxxx-xxxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, generate);
+        
+        return uuid;
+    };
+
 BMSRequest.prototype = function () {
 
     /**
@@ -77,6 +93,10 @@ BMSRequest.prototype = function () {
         this._queryParameters = JSON.parse(JSON.stringify(jsonObj));
     };
 
+
+    var responseData = function(data) {
+            return data;
+        }
     /**
      * Send this resource request asynchronously.
      * @param body (Optional) The body: Either a string or an object
@@ -85,37 +105,51 @@ BMSRequest.prototype = function () {
      */
     var send = function () {
         var buildRequest = buildJSONRequest.bind(this);
-
-       //console.log(buildRequest(arguments[0]));
-
-      // console.log(arguments[0]+' '+arguments[1]);
-
-
-
-
+        var startTime =  new Date().getTime(); 
+        var request;
+        console.log("BMSAnalytics : "+BMSAnalytics);
         if(arguments.length == 2) {
             // Empty Body
             var Success = callbackWrap.bind(this, arguments[0]);
             var Failure = callbackWrap.bind(this, arguments[1]);
 
-            //console.log(Success+" "+Failure+" "+this.getQueryParameters()+" "+this.getMethod());
-            //$.ajax({url:this.getUrl()+$.param(this.getQueryParameters()),type:this.getMethod(),headers:this.getHeaders(),success:Success,error:Failure});
-            $.ajax(buildRequest());
-        //    cordova.exec(cbSuccess, cbFailure, "BMSRequest", "send", [buildRequest()]);
+            request=buildRequest();
+
+            $.ajax(request);
+
         } else if(arguments.length >= 3) {
             // Non-empty Body
             if(typeof arguments[0] == "string" || typeof arguments[0] == "object") {
                 var Success = callbackWrap.bind(this, arguments[1]);
                 var Failure = callbackWrap.bind(this, arguments[2]);
 
+                request=buildRequest(arguments[0]);
 
-                //console.log(Success+" "+Failure+" "+this.getQueryParameters()+" "+this.getMethod());
-                $.ajax(buildRequest(arguments[0]));
+                $.ajax(request);
+
             }
         }
+
+        var endTime = new Date().getTime(); 
+
+
+        var metadata = {
+            "$path":  request.url,
+            "$trackingid": generateUUID(),
+            "$requestMethod": request.method,
+            "$outboundTimestamp": startTime,
+            "$inboundTimestamp": endTime,
+            "$roundTripTime": endTime - startTime,
+            "$bytesSent": request.body.length,
+            
+        };
+
+         // "$responseCode": response.code(),
+         // "$bytesReceived", response.body.length()   
+
+
+         BMSAnalytics.log(metadata);
     };
-
-
 
 
     /**
@@ -140,7 +174,7 @@ BMSRequest.prototype = function () {
         request.timeout = this.getTimeout();
         request.queryParameters = this.getQueryParameters();
         request.body = "";
-
+        //  request.success = this.responseData();
         if (typeof body === "string") {
             request.body = body;
         }
@@ -154,6 +188,8 @@ BMSRequest.prototype = function () {
         console.log(" The request is: " + JSON.stringify(request));
         return request;
     };
+
+
 
     return {
         setHeaders: setHeaders,
