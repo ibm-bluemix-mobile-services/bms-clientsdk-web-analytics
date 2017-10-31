@@ -108,12 +108,7 @@ require(['BMSAnalytics'], function() { //,BMSAnalytics'BMSRequest','BMSClient'
                 var failure = function(error){
                     console.log("failure", error);
                 }
-                console.log(BMSRequest);
-
-
-
-                console.log(BMSRequest);
-
+               
                 var request = new BMSRequest("https://www.google.com", BMSRequest.GET);
               //  var headers = {
               //      header1: "val1",
@@ -128,6 +123,8 @@ require(['BMSAnalytics'], function() { //,BMSAnalytics'BMSRequest','BMSClient'
                 request.setQueryParameters(queryParams);
 
                 request.send(success, failure);
+
+
           },
           //test server connection
           "testServerConnection": function testServerConnection() {

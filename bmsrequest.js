@@ -144,8 +144,8 @@ BMSRequest.prototype = function () {
             
         };
 
-         // "$responseCode": response.code(),
-         // "$bytesReceived", response.body.length()   
+          // "$responseCode": response.code(),
+          // "$bytesReceived", response.body.length()   
 
 
          BMSAnalytics.log(metadata);
