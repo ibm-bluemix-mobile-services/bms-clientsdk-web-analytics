@@ -4,7 +4,10 @@ var BMSRequest = function (url, method, timeout) {
     this._queryParameters = {};
     this._url = url;
     this._method = method;
-    this._timeout = timeout || 30000;
+    this._timeout = timeout || 3000;
+    this._responseCode='';
+    this._startTime;
+    this._endTime;
 };
 
 BMSRequest.GET = "GET";
@@ -94,9 +97,13 @@ BMSRequest.prototype = function () {
     };
 
 
-    var responseData = function(data) {
-            return data;
-        }
+     
+
+
+    var getResponseCode = function(){
+        return this.responseCode;
+    };
+
     /**
      * Send this resource request asynchronously.
      * @param body (Optional) The body: Either a string or an object
@@ -105,9 +112,8 @@ BMSRequest.prototype = function () {
      */
     var send = function () {
         var buildRequest = buildJSONRequest.bind(this);
-        var startTime =  new Date().getTime(); 
+        
         var request;
-        console.log("BMSAnalytics : "+BMSAnalytics);
         if(arguments.length == 2) {
             // Empty Body
             var Success = callbackWrap.bind(this, arguments[0]);
@@ -130,25 +136,24 @@ BMSRequest.prototype = function () {
             }
         }
 
-        var endTime = new Date().getTime(); 
+        
+
+        // var metadata = {
+        //     "$path":  request.url,
+        //     "$trackingid": generateUUID(),
+        //     "$requestMethod": request.method,
+        //     "$outboundTimestamp": this._startTime,
+        //     "$inboundTimestamp": this._endTime,
+        //     "$roundTripTime": this._endTime - this._startTime,
+        //     "$bytesSent": request.body.length,
+        //     "$responseCode":    this.responseCode        
+        // };
+
+        //  // "$responseCode": response.code(),
+        //  // "$bytesReceived", response.body.length()   
 
 
-        var metadata = {
-            "$path":  request.url,
-            "$trackingid": generateUUID(),
-            "$requestMethod": request.method,
-            "$outboundTimestamp": startTime,
-            "$inboundTimestamp": endTime,
-            "$roundTripTime": endTime - startTime,
-            "$bytesSent": request.body.length,
-            
-        };
-
-          // "$responseCode": response.code(),
-          // "$bytesReceived", response.body.length()   
-
-
-         BMSAnalytics.log(metadata);
+        //  BMSAnalytics.log(metadata);
     };
 
 
@@ -167,7 +172,7 @@ BMSRequest.prototype = function () {
 
     var buildJSONRequest = function (body) {
         var request = {};
-
+        request._startTime= new Date().getTime();
         request.url = this.getUrl();
         request.method = this.getMethod();
         request.headers = this.getHeaders();
@@ -185,6 +190,51 @@ BMSRequest.prototype = function () {
             }
         }
         //TODO update when Logger is complete
+
+        // request.success = function(response)
+        // {
+        //     this._endTime= new Date().getTime();
+
+        //     var metadata = {
+        //     "$path":  this.url,
+        //     "$trackingid": generateUUID(),
+        //     "$requestMethod": this.method,
+        //     "$outboundTimestamp": this._startTime,
+        //     "$inboundTimestamp": this._endTime,
+        //     "$roundTripTime": this._endTime - this._startTime,
+        //     "$bytesSent": request.body.length,
+        //     "$responseCode":    this.responseCode,
+        //     "$bytesReceived": response.length        
+        // };
+
+        //  // "$responseCode": response.code(),
+        //  // "$bytesReceived", response.body.length()   
+
+
+        //  BMSAnalytics.log(metadata);
+        // } 
+        
+        request.complete = function(xhr, status){
+            alert(xhr.status); 
+           
+            this._endTime= new Date().getTime();
+            this._responseCode=xhr.status;
+
+            var metadata = {
+            "$path":  this.url,
+            "$trackingid": generateUUID(),
+            "$requestMethod": this.method,
+            "$category" : 'network',
+            "$outboundTimestamp": this._startTime,
+            "$inboundTimestamp": this._endTime,
+            "$roundTripTime": this._endTime - this._startTime,
+            "$bytesSent": request.body.length,
+            "$responseCode":    this._responseCode,
+            "$bytesReceived": xhr.responseText.length        
+            };
+       
+             BMSAnalytics.log(metadata);
+        }
         console.log(" The request is: " + JSON.stringify(request));
         return request;
     };

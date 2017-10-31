@@ -224,6 +224,7 @@ BMSRequest.prototype = function () {
             "$path":  this.url,
             "$trackingid": generateUUID(),
             "$requestMethod": this.method,
+            "$category" : 'network',
             "$outboundTimestamp": this._startTime,
             "$inboundTimestamp": this._endTime,
             "$roundTripTime": this._endTime - this._startTime,
